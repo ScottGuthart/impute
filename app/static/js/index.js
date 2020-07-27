@@ -10,7 +10,7 @@ const request_impute = async (data) => {
   xhr.onreadystatechange = function() { // Call a function when the state changes.
     if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
         // Request finished. Do processing here.
-        console.log(this.response)
+        sheet.setData(this.response)
     }
 }
 

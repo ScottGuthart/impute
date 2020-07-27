@@ -1,10 +1,12 @@
 import os
-from flask import render_template, request
+import json
+import numpy as np
+from missingpy import MissForest
+from flask import render_template, request, jsonify
 from flask_login import login_required
 from app.main import bp
 from app.main.save_user_file import utc_to_human_readable
 from app.auth.confirm import check_confirmed
-import json
 
 
 @bp.route('/')
@@ -19,9 +21,13 @@ def index():
 @login_required
 @check_confirmed
 def request_impute():
-    data = json.loads(request.data)
-    print(data)
-    return 'hi'
+    raw_data = json.loads(request.data)
+    data = [[float(x) if x.isnumeric() else np.nan for x in row]
+            for row in raw_data]
+    imputer = MissForest()
+    X_imputed = imputer.fit_transform(data)
+
+    return jsonify(X_imputed.tolist())
 
 
 @bp.app_template_filter("autoversion")
