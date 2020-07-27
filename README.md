@@ -28,3 +28,4 @@ Includes:
         SECURITY_PASSWORD_SALT=put_your_password_salt_here
         SECRET_KEY=put_your_secret_key_here
         ```
+* run `flask db upgrade` to setup the database.

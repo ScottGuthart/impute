@@ -1,17 +1,18 @@
-development/
 .flaskenv
 .env
 .herokuenv
-.vscode/
 logs/
 .DS_Store
 venv/
 instance/files/*/
+.vscode/tags
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*/__pycache__/
 
 # Flask stuff:
 .webassets-cache
