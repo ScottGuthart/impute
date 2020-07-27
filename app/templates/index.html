@@ -5,6 +5,7 @@
 {{super()}}
 <link rel='stylesheet' href="{{ url_for('static', filename='jexcel.css')|autoversion }}">
 <link rel='stylesheet' href="{{ url_for('static', filename='jsuites.css')|autoversion }}">
+<link rel='stylesheet' href="{{ url_for('static', filename='base.css')|autoversion }}">
 {% endblock %}
 
 {% block scripts %}
@@ -15,9 +16,11 @@
 {% endblock %}
 
 {% block app_content %}
-<h1 class="mt-5"> Hello World!</h1>
-<p>
-<div id='spreadsheet'>
+<h1 class="mt-5"> Impute <span class="text-muted">Random Forest</span></h1>
+<div class="row m-3" id="spreadsheet">
 </div>
-</p>
+
+<div id="imputeButton" class="fab btn btn-primary btn-lg shadow-lg">
+    Impute
+</div>
 {% endblock %}
