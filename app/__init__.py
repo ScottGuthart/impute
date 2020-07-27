@@ -1,6 +1,8 @@
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
+from redis import Redis
+import rq
 from flask import Flask, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,7 +10,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from config import Config
-from flask_talisman import Talisman # to force SSL if available
+from flask_talisman import Talisman  # to force SSL if available
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -25,6 +27,7 @@ csp = {
     'style-src': '\'unsafe-inline\' \'self\'',
 }
 
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -35,9 +38,11 @@ def create_app(config_class=Config):
     mail.init_app(app)
     bootstrap.init_app(app)
     talisman.init_app(app,
-        content_security_policy=csp,
-        content_security_policy_nonce_in=['script-src'])
+                      content_security_policy=csp,
+                      content_security_policy_nonce_in=['script-src'])
     # talisman.init_app(app, content_security_policy=None) # to disable CSP
+    app.redis = Redis.from_url(app.config['REDIS_URL'])
+    app.task_queue = rq.Queue('flaskapp-tasks', connection=app.redis)
 
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -79,5 +84,3 @@ def create_app(config_class=Config):
         app.logger.info('Flaskapp startup')
 
     return app
-
-from app import models

@@ -1,12 +1,12 @@
 import os
 import json
-import numpy as np
-from missingpy import MissForest
 from flask import render_template, request, jsonify
-from flask_login import login_required
+from flask_login import login_required, current_user
+from app import db
 from app.main import bp
 from app.main.save_user_file import utc_to_human_readable
 from app.auth.confirm import check_confirmed
+from app.models import Task
 
 
 @bp.route('/')
@@ -21,13 +21,30 @@ def index():
 @login_required
 @check_confirmed
 def request_impute():
-    raw_data = json.loads(request.data)
-    data = [[float(x) if x.isnumeric() else np.nan for x in row]
-            for row in raw_data]
-    imputer = MissForest()
-    X_imputed = imputer.fit_transform(data)
+    if current_user.get_task_in_progress('run_impute'):
+        return 'An impute request is currently running'
+    else:
+        raw_data = json.loads(request.data)
+        task = current_user.launch_task('run_impute', 'Impute', raw_data)
+        db.session.commit()
+        return task.id
+    # imputed = run_impute(raw_data)
+    # return jsonify(imputed)
 
-    return jsonify(X_imputed.tolist())
+
+@bp.route('/check_task_result/<task_id>', methods=['GET'])
+@login_required
+@check_confirmed
+def check_task_result(task_id):
+    task = Task.query.filter_by(user=current_user, id=task_id).first()
+    job = task.get_rq_job()
+    if task and task.complete and job:
+        result = job.meta['result']
+        return jsonify(result)
+    elif task and not task.complete:
+        return jsonify([task.get_progress()])
+    else:
+        return "Error finding task"
 
 
 @bp.app_template_filter("autoversion")
