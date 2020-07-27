@@ -1,0 +1,10 @@
+Dear {{ user.username }},
+
+To confirm your email please click on the following link:
+
+{{ confirm_url }}
+
+
+Sincerely,
+
+Website Administrator

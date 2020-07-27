@@ -1,0 +1,36 @@
+development/
+.flaskenv
+.env
+.herokuenv
+.vscode/
+logs/
+.DS_Store
+venv/
+instance/files/*/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Flask stuff:
+.webassets-cache
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+*.log
+.vagrant/
+app.db
+dump.rdb
+*-checkpoint.ipynb
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# Temporary Excel Files
+~$*.xlsx
+~$*.csv
+~$*.xls

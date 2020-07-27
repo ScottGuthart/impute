@@ -1,0 +1,65 @@
+{% from 'bootstrap/nav.html' import render_nav_item %}
+{% from 'bootstrap/utils.html' import render_messages %}
+<html lang="en">
+  <head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block styles %}
+        {# {{ bootstrap.load_css() }} #} {# for default bootstrap without responsive type #}
+        <link rel='stylesheet' href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}"> {# responsive type #}
+        <link rel='stylesheet' href="{{url_for('static', filename='sticky-footer.css')}}">
+        {% endblock %}
+
+        {% block title %}
+            <title>
+            {% if title %}{{ title }} - Flask App{% else %} Welcome to Flaskapp{% endif %}
+            </title>
+            <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        {% endblock %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block navbar %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav mr-auto">
+                    {{ render_nav_item('main.index', 'Home') }}
+                </div>
+                <div class="navbar-nav ml-auto">
+                    {% if current_user.is_anonymous %}
+                            {{ render_nav_item('auth.login', 'Login') }}
+                            {% else %}
+                            {{ render_nav_item('auth.logout', 'Logout') }}
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    {% endblock %}
+    {{ render_messages(container=False, dismissible=True) }}
+    <main class="container">
+    
+    {% block content %}{% block app_content %}{% endblock %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+    <div class="container">
+    <span class="text-muted">
+    {% block footer %}
+        <small> &copy; 2020 <a href="http://example.com" title="Example Industries">Example Industries</a>
+        </small>
+    {% endblock %}
+    </span>
+    </div>
+    </footer>
+
+    {% block scripts %}
+    {{ bootstrap.load_js() }}
+    {% endblock %}
+  </body>
+</html>
