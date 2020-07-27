@@ -28,10 +28,17 @@ def _set_task_result(result):
         job.meta['result'] = result.tolist()
 
 
+def floatify(x):
+    try:
+        return float(x)
+    except ValueError:
+        return np.nan
+
+
 def run_impute(user_id, data):
     try:
         _set_task_progress(0)
-        data = [[float(x) if x.isnumeric() else np.nan for x in row]
+        data = [[floatify(x) for x in row]
                 for row in data]
         imputer = MissForest()
         imputed = imputer.fit_transform(data)
