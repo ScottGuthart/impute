@@ -11,6 +11,7 @@ from app.auth.confirm import confirm_token, generate_confirmation_token
 from app.email import send_email
 import datetime
 
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -27,10 +28,12 @@ def login():
         return redirect(url_for('main.index'))
     return render_template('auth/login.html', title='Sign In', form=form)
 
+
 @bp.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -38,26 +41,30 @@ def register():
         return redirect(url_for('main.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data, confirmed=False)
+        user = User(username=form.username.data,
+                    email=form.email.data, confirmed=False)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         token = generate_confirmation_token(user.email)
         flash('Check your email for a confirmation link!')
-        confirm_url = url_for('auth.confirm_email', token=token, _external=True)
-        send_email('[Flask App] Confirm your email',
-               sender=current_app.config['ADMINS'][0],
-               recipients=[user.email],
-               text_body=render_template('email/activate.txt', user=form.username.data, confirm_url=confirm_url),
-               html_body=render_template('email/activate.html', user=form.username.data, confirm_url=confirm_url))
+        confirm_url = url_for('auth.confirm_email',
+                              token=token, _external=True)
+        send_email('[Impute] Confirm your email',
+                   sender=current_app.config['ADMINS'][0],
+                   recipients=[user.email],
+                   text_body=render_template(
+                       'email/activate.txt', user=form.username.data, confirm_url=confirm_url),
+                   html_body=render_template('email/activate.html', user=form.username.data, confirm_url=confirm_url))
         login_user(user)
         return redirect(url_for('auth.unconfirmed'))
     return render_template('auth/register.html', title='Register', form=form)
 
+
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
-            return redirect(url_for('main.index'))
+        return redirect(url_for('main.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -66,7 +73,8 @@ def reset_password_request():
         flash('Check your email for the instructions to reset your password')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password_request.html',
-                        title='Reset Password', form=form)
+                           title='Reset Password', form=form)
+
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
@@ -83,7 +91,8 @@ def reset_password(token):
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
 
-## CONFIRM ROUTES
+# CONFIRM ROUTES
+
 
 @bp.route('/unconfirmed')
 def unconfirmed():
@@ -93,6 +102,7 @@ def unconfirmed():
     if current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('auth/unconfirmed.html')
+
 
 @bp.route('/confirm/<token>')
 def confirm_email(token):
@@ -111,15 +121,17 @@ def confirm_email(token):
         flash('You have confirmed your account. Thanks!')
     return redirect(url_for('main.index'))
 
+
 @login_required
 @bp.route('/resend')
 def resend_confirmation():
     token = generate_confirmation_token(current_user.email)
     confirm_url = url_for('auth.confirm_email', token=token, _external=True)
-    send_email('[Flask App] Confirm your email',
+    send_email('[Impute] Confirm your email',
                sender=current_app.config['ADMINS'][0],
                recipients=[current_user.email],
-               text_body=render_template('email/activate.txt', user=current_user, confirm_url=confirm_url),
+               text_body=render_template(
+                   'email/activate.txt', user=current_user, confirm_url=confirm_url),
                html_body=render_template('email/activate.html', user=current_user, confirm_url=confirm_url))
     flash('A new confirmation email has been sent.')
     return redirect(url_for('auth.unconfirmed'))

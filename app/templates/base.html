@@ -14,7 +14,7 @@
 
         {% block title %}
             <title>
-            {% if title %}{{ title }} - Flask App{% else %} Welcome to Flaskapp{% endif %}
+            {% if title %}{{ title }} - Flask App{% else %} Impute{% endif %}
             </title>
             <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
         {% endblock %}
@@ -51,7 +51,9 @@
     <div class="container">
     <span class="text-muted">
     {% block footer %}
-        <small> &copy; 2020 <a href="http://example.com" title="Example Industries">Example Industries</a>
+        <small>
+            &copy; 2020
+            <a href="https://radius-global.com/" title="radius | illumination" target="_blank">radius | illumination</a>
         </small>
     {% endblock %}
     </span>
