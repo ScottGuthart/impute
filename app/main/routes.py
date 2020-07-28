@@ -57,5 +57,5 @@ def autoversion_filter(filename):
         print(f"couldn't find {filename}")
         return filename
     newfilename = "{0}?v={1}".format(filename, timestamp)
-    print(f"returning {newfilename}")
+    # print(f"returning {newfilename}")
     return newfilename

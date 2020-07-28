@@ -7,6 +7,7 @@ from config import Config
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    WTF_CSRF_ENABLED = False
 
 
 class BasicTestCase(unittest.TestCase):
@@ -51,12 +52,32 @@ class FlaskAppTestCase(unittest.TestCase):
         self.app = create_app(TestConfig)
         self.app_context = self.app.app_context()
         self.app_context.push()
+        self.client = self.app.test_client()
         db.create_all()
 
     def tearDown(self):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
+
+    def login(self, username, password):
+        return self.client.post('/auth/login', data=dict(
+            username=username,
+            password=password), follow_redirects=True)
+
+    def logout(self):
+        return self.client.get('/auth/logout', follow_redirects=True)
+
+    def test_login_logout(self):
+        u = User(username='susan')
+        u.set_password('cat')
+        u.confirmed = True
+        db.session.add(u)
+        db.session.commit()
+        rv = self.login('susan', 'cat')
+        assert b'Logout' in rv.data
+        rv = self.logout()
+        assert b'Login' in rv.data
 
 
 if __name__ == "__main__":
