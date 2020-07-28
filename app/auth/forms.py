@@ -3,11 +3,13 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
 
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -26,16 +28,19 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
-        #to allow specific email addresses to regiser
-        if email.data.lower() in ['example@example.com']:
+        # to allow specific email addresses to regiser
+        if email.data.lower() in ['seguthart@gmail.com']:
             return True
-        #to restrict registration to specific domains
-        if email.data.lower().split('@')[-1] not in ['gmail.com']:
-            raise ValidationError("You need a gmail address to register.")
+        # to restrict registration to specific domains
+        if email.data.lower().split('@')[-1] not in ['radius-global.com', 'radius-illumination.com']:
+            raise ValidationError(
+                "Your email isn't on our list yet. Contact radius | illumination to get access.")
+
 
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
+
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
