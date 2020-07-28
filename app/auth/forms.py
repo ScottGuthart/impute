@@ -29,12 +29,11 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
         # to allow specific email addresses to regiser
-        if email.data.lower() in ['seguthart@gmail.com']:
+        if email.data.lower() in ['example@example.com']:
             return True
         # to restrict registration to specific domains
-        if email.data.lower().split('@')[-1] not in ['radius-global.com', 'radius-illumination.com']:
-            raise ValidationError(
-                "Your email isn't on our list yet. Contact radius | illumination to get access.")
+        if email.data.lower().split('@')[-1] not in ['gmail.com']:
+            raise ValidationError("You need a gmail address to register.")
 
 
 class ResetPasswordRequestForm(FlaskForm):
