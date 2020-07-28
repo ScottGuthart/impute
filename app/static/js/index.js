@@ -1,7 +1,16 @@
+var wait = 0;
 data = [[,]];
 sheet = jexcel(document.getElementById('spreadsheet'), {
   minDimensions:[2,2],
   wordWrap:true,
+  onbeforepaste: (instance, data, x, y) => {
+    jSuites.loading.show();
+    return data
+  },
+  onpaste: () => {
+    jSuites.loading.hide();
+    document.getElementById('loading').style.display = 'none';
+  }
 });
 
 const request_impute = async (data) => {
@@ -20,8 +29,10 @@ const request_impute = async (data) => {
 }
 const imputeButton = document.getElementById('imputeButton')
 imputeButton.onclick = () => {
-  var data = sheet.getData();
-  request_impute(data);
+  if (imputeButton.textContent.includes('Impute')){
+    var data = sheet.getData();
+    request_impute(data);
+  }
 }
 
 const check_task_result = async (task_id) => {
@@ -30,9 +41,13 @@ const check_task_result = async (task_id) => {
   .then(data => {
     if (data.length > 1) {
       sheet.setData(data)
+      imputeButton.textContent = 'Impute'
+      wait = 0;
     }
     else {
-      console.log(`Progress: ${data}`)
+      console.log(`Progress: ${data} wait: ${wait}`)
+      imputeButton.textContent = `${wait}%`
+      wait += 5;
       setTimeout(function() {
         check_task_result(task_id);
       }, 2000);
