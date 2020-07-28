@@ -44,7 +44,11 @@ def run_impute(user_id, data):
         imputed = imputer.fit_transform(data)
         _set_task_result(imputed)
         _set_task_progress(100)
-
+    except ValueError:
+        app.logger.error('Unhandled exception', exc_info=sys.exc_info())
+        _set_task_result(
+            np.array(["ERROR: One or more columns have all rows missing"]))
+        _set_task_progress(100)
     except:
         _set_task_progress(100)
         app.logger.error('Unhandled exception', exc_info=sys.exc_info())

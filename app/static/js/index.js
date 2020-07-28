@@ -9,7 +9,6 @@ sheet = jexcel(document.getElementById('spreadsheet'), {
   },
   onpaste: () => {
     jSuites.loading.hide();
-    document.getElementById('loading').style.display = 'none';
   }
 });
 
@@ -41,6 +40,16 @@ const check_task_result = async (task_id) => {
   .then(data => {
     if (data.length > 1) {
       sheet.setData(data)
+      imputeButton.textContent = 'Impute'
+      wait = 0;
+    }
+    else if (typeof(data[0]) == "string" && data[0].includes('ERROR')) {
+      alert(data[0]);
+      imputeButton.textContent = 'Impute'
+      wait = 0;
+    }
+    else if (wait >= 100) {
+      alert('Impute timed out. Maybe try again in a bit? Or let Scott know')
       imputeButton.textContent = 'Impute'
       wait = 0;
     }
