@@ -1,4 +1,4 @@
-# [Impute](https://rfimpute.herokuapp.com/)
+# Impute
 
 **[Check it out](https://rfimpute.herokuapp.com/)**
 
