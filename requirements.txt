@@ -26,7 +26,7 @@ mccabe==0.6.1
 missingpy==0.2.0
 numpy==1.17.4
 pandas==0.25.3
-PyJWT==1.7.1
+PyJWT==2.4.0
 pylint==2.4.4
 python-dateutil==2.8.1
 python-dotenv==0.10.3
