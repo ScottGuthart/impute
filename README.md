@@ -6,7 +6,6 @@
 Toy Application demonstrating embedded spreadsheets and long running tasks in flask. Paste in data with missing values and press impute. Random forest imputation takes place as a background job and the front end checks in every couple seconds to see if it's done.
 
 # More Info
-Inspired by and modeled after [Miguel Grinberg's Flask Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world). Links are included to corresponding sections in the tutorial if you want to learn more.
 
 Includes:
 * Login / User Registration with email confirmation ([Learn More](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-v-user-logins))
