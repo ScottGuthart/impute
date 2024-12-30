@@ -1,7 +1,5 @@
 # Impute
 
-**[Check it out](https://rfimpute.herokuapp.com/)**
-
 # Description
 Toy Application demonstrating embedded spreadsheets and long running tasks in flask. Paste in data with missing values and press impute. Random forest imputation takes place as a background job and the front end checks in every couple seconds to see if it's done.
 
